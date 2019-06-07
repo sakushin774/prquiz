@@ -18,11 +18,10 @@ class Question
     public function __construct()
     {
         $page = rand(1, 10000);
-        $listUrl = 'https://9b199e13.prtimes.tech/' . $page;
+        $listUrl = 'https://9b199e13.prtimes.tech/list/' . $page;
         $response = json_decode(file_get_contents($listUrl), true);
         $this->titleList = collect($response['data'])->pluck('title');
-
-        $this->answerNum = rand(1, 20);
+        $this->answerNum = rand(0, 19);
         $this->answer = self::fetchReleaseDetail(
             $response['data'][$this->answerNum]['company_id'],
             $response['data'][$this->answerNum]['release_id']
@@ -58,5 +57,12 @@ class Question
         $detailUrl = 'https://9b199e13.prtimes.tech/detail/' . $company_id . '/' . $release_id;
         $response = json_decode(file_get_contents($detailUrl), true);
         return $response;
+    }
+
+    public static function getNonduplicateRandList($num, $min, $max)
+    {
+        $random = range( $min, $max);
+        shuffle( $random );
+        return array_slice($random, 0, $num);
     }
 }

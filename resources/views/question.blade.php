@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <title>Laravel Quickstart - Basic</title>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -26,20 +24,19 @@
 <div class="container col-lg-4 col-md-6 mt-3">
     <div class="row">
         <div class="col h1">
-            x問目
+            {{session('page')}}問目 ({{session('correct') ?? 0}}問正解)
         </div>
     </div>
 
     <div class="row my-2">
         <div class="col">
-            <div>企業ID:12345</div>
-            <div>リリースID:123</div>
+            <div>企業ID:{{$ans['company_id']}}</div>
+            <div>リリースID:{{$ans['release_id']}}</div>
         </div>
-
     </div>
 
     <div class="text-center px-0 mx-auto">
-        <img class="img-fluid" height="200" src="https://prtimes.jp/i/36952/8/resize/d36952-8-578823-2.jpg" />
+        <img class="img-fluid" height="200" src="{{$ans['data']['main_image']}}" />
     </div>
 
     <div class="h4 mt-3">ヒント</div>
@@ -49,7 +46,7 @@
         </a>
         <div class="collapse" id="hintCompanyName">
             <div class="card card-body">
-                企業名 : PR TIMES
+                企業名 : {{$ans['data']['company_name']}}
             </div>
         </div>
     </div>
@@ -60,7 +57,8 @@
         </a>
         <div class="collapse" id="hintBusiCate">
             <div class="card card-body">
-                企業名 : PR TIMES
+                メインカテゴリ : {{$ans['data']['main_category_name']}}
+                サブカテゴリ : {{$ans['data']['sub_category_name']}}
             </div>
         </div>
     </div>
@@ -71,7 +69,7 @@
         </a>
         <div class="collapse" id="hintReleasedAt">
             <div class="card card-body">
-                企業名 : PR TIMES
+                配信日時 : {{$ans['data']['created_at']}}
             </div>
         </div>
     </div>
@@ -82,24 +80,22 @@
         </a>
         <div class="collapse" id="hintKeyword">
             <div class="card card-body">
-                企業名 : PR TIMES
+                キーワード : {{implode(',', $ans['data']['keywords'])}}
             </div>
         </div>
     </div>
-
-    <form method="post" action="/answer">
-        <div class="form-group my-4">
-            <label for="answerForm">正しいタイトルを選択</label>
-            <select class="form-control" id="answerForm">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+    <div class="form-group my-4">
+        <form method="post" action="/answer">
+            {{ csrf_field() }}
+            <label for="answerForm">正しいタイトルを選択して下さい</label>
+            <select name="num" class="form-control" id="answerForm">
+                @foreach ($titles as $t)
+                    <option value="{{$loop->index}}">{{$t}}</option>
+                @endforeach
             </select>
-            <button class="btn btn-primary my-3">送信する</button>
-        </div>
-    </form>
+            <input type="submit" value="回答を送信する" class="btn btn-primary my-3">
+        </form>
+    </div>
 </div>
 </body>
 </html>
