@@ -1,29 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>PR QUIZ</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="/css/app.css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    {{--<script src="https://cdn.jsdelivr.net/npm/sharer.js@latest/sharer.min.js"></script>--}}
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-
-    <script src="/js/app.js"></script>
-    <!-- CSSとJavaScript -->
-</head>
-
+@include('layouts.header')
 <body>
 
 <div class="container col-lg-4 col-md-6 mt-3">
     <div class="row">
-        <div class="col h1">
+        <div class="col h2">
             {{session('page')}}問目 ({{session('correct') ?? 0}}問正解)
         </div>
     </div>
@@ -41,46 +23,46 @@
 
     <div class="h4 mt-3">ヒント</div>
     <div class="my-3">
-        <a data-toggle="collapse" href="#hintCompanyName" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a class="hint" data-toggle="collapse" href="#company_name" role="button" aria-expanded="false" aria-controls="collapseExample">
             企業名
         </a>
-        <div class="collapse" id="hintCompanyName">
+        <div class="collapse" id="company_name">
             <div class="card card-body">
-                企業名 : {{$ans['data']['company_name']}}
+                企業名 : <span class="hint"></span>
             </div>
         </div>
     </div>
 
     <div class="my-3">
-        <a data-toggle="collapse" href="#hintBusiCate" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a data-toggle="collapse" href="#main_category_name" role="button" aria-expanded="false" aria-controls="collapseExample">
             ビジネスカテゴリ
         </a>
-        <div class="collapse" id="hintBusiCate">
+        <div class="collapse" id="main_category_name">
             <div class="card card-body">
-                メインカテゴリ : {{$ans['data']['main_category_name']}}
-                サブカテゴリ : {{$ans['data']['sub_category_name']}}
+                メインカテゴリ : <span class="hint"></span>
+                {{--サブカテゴリ : {{$ans['data']['sub_category_name']}}--}}
             </div>
         </div>
     </div>
 
     <div class="my-3">
-        <a data-toggle="collapse" href="#hintReleasedAt" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a data-toggle="collapse" href="#created_at" role="button" aria-expanded="false" aria-controls="collapseExample">
             配信日時
         </a>
-        <div class="collapse" id="hintReleasedAt">
+        <div class="collapse" id="created_at">
             <div class="card card-body">
-                配信日時 : {{$ans['data']['created_at']}}
+                配信日時 : <span class="hint"></span>
             </div>
         </div>
     </div>
 
     <div class="my-3">
-        <a data-toggle="collapse" href="#hintKeyword" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a data-toggle="collapse" href="#keywords" role="button" aria-expanded="false" aria-controls="collapseExample">
             キーワード
         </a>
-        <div class="collapse" id="hintKeyword">
+        <div class="collapse" id="keywords">
             <div class="card card-body">
-                キーワード : {{implode(',', $ans['data']['keywords'])}}
+                キーワード : <span class="hint"></span>
             </div>
         </div>
     </div>
@@ -97,5 +79,24 @@
         </form>
     </div>
 </div>
+<script>
+    let usedHints = [];
+    $(document).ready(function() {
+      $('.collapse').on('show.bs.collapse', function(){
+        let type = this.id;
+        let $collapse = $(this);
+        if(usedHints.indexOf(type) === -1){
+          usedHints.push(type);
+          $.ajax({
+            url: '/hint/' + type,
+            success: function(data) {
+              console.log('hoge');
+              $collapse.find('.hint').text(data)
+            }
+          });
+        }
+      });
+    });
+</script>
 </body>
 </html>

@@ -17,11 +17,18 @@ class FrontController extends Controller
     public function index()
     {
         session()->flush();
+        session(['correct' => 0, 'hint' => 0, 'page' => 0]);
         return view('index');
     }
 
     public function question()
     {
+        if(is_null(session('page'))){
+            return redirect('/');
+        } elseif(session('page') >= 10) {
+            return redirect('/result');
+        }
+
         $q = new Question();
         session([
             'answerNum' => $q->getAnswerNum(),
@@ -38,6 +45,9 @@ class FrontController extends Controller
 
     public function answer(Request $request)
     {
+        if(is_null(session('ans'))){
+            return redirect('/');
+        }
         $predict = $request->input('num');
         $actual = session('answerNum');
         $isCorrect = ($predict == $actual);
@@ -55,6 +65,23 @@ class FrontController extends Controller
 
     public function result()
     {
-        return view('result');
+        if(is_null(session('page'))){
+            return redirect('/');
+        }
+        $point = session('correct') * 10 - session('hint') * 2;
+        $shareMessage = '合計スコアは' . $point . '点でした。 - プレスリリースクイズならPR QUIZ';
+        return view('result', ['point' => $point, 'shareMessage' => $shareMessage]);
+    }
+
+    public function hint($type)
+    {
+        $types = ['company_name', 'main_category_name', 'created_at', 'keywords'];
+        if(in_array($type, $types) && session('answer')){
+            session(['hint' => session('hint') + 1]);
+            $ans = session('answer');
+            return $ans['data'][$type];
+        }else{
+            return 'bad request';
+        }
     }
 }

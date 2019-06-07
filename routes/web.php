@@ -22,6 +22,4 @@ Route::post('/answer', 'FrontController@answer');
 
 Route::get('/result', 'FrontController@result');
 
-Route::get('/session', function (){
-    return session()->all();
-});
+Route::get('/hint/{type}', 'FrontController@hint');

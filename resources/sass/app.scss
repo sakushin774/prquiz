@@ -12,3 +12,22 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+@mixin btn-sns($color){
+  color: #fff;
+  background: $color;
+  border-color: $color;
+  &:hover {
+    color: #fff;
+  }
+}
+
+.btn-twitter {
+  @include btn-sns(#55acee)
+}
+.btn-facebook {
+  @include btn-sns(#3B5998)
+}
+.btn-line {
+  @include btn-sns(#1dcd00)
+}
