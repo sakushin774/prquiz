@@ -57,7 +57,7 @@
         LINEでシェア
     </button>
 
-    <a href="/" class="btn btn-outline-secondary col-12 my-4"><i class="fas fa-arrow-left"></i>トップに戻る</a>
+    <a href="/" class="btn btn-outline-secondary col-12 my-4"><i class="mx-2 fas fa-arrow-left"></i>トップに戻る</a>
 </div>
 </body>
 </html>

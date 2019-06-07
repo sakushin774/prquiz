@@ -6,7 +6,7 @@
 <div class="container col-lg-4 col-md-6 mt-3">
     <div class="row my-2 h2">
         <div class="col">
-            説明
+            遊びかた
         </div>
     </div>
     <div class="row my-2">

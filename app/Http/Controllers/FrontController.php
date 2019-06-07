@@ -45,7 +45,7 @@ class FrontController extends Controller
 
     public function answer(Request $request)
     {
-        if(is_null(session('ans'))){
+        if(is_null(session('answer'))){
             return redirect('/');
         }
         $predict = $request->input('num');
